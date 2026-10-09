@@ -1,0 +1,206 @@
+/* Animated border glow effect for Toolbar */
+/* Inspired by Uiverse.io by Lakshay-art */
+
+.toolbarWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Shared styles for glow layers */
+.glowLayer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Outer glow - diffuse light effect */
+.glow {
+  composes: glowLayer;
+  filter: blur(20px);
+  opacity: 0.5;
+  width: calc(100% + 40px);
+  height: calc(100% + 40px);
+  left: -20px;
+  top: -20px;
+}
+
+.glow::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  width: 200%;
+  height: 200%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: conic-gradient(
+    transparent 0%,
+    #6366f1 5%,
+    transparent 15%,
+    transparent 45%,
+    #a855f7 55%,
+    transparent 65%
+  );
+  animation: rotateGlow 8s linear infinite;
+  transition: opacity 0.3s ease;
+}
+
+/* Dark border background layer */
+.darkBorderBg {
+  composes: glowLayer;
+  filter: blur(3px);
+}
+
+.darkBorderBg::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  width: 200%;
+  height: 200%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: conic-gradient(
+    transparent 0%,
+    #312e81 8%,
+    transparent 18%,
+    transparent 45%,
+    #581c87 55%,
+    transparent 65%
+  );
+  animation: rotateGlow 8s linear infinite;
+}
+
+/* White/bright border layer */
+.whiteBorder {
+  composes: glowLayer;
+  filter: blur(2px);
+  border-radius: 13px;
+}
+
+.whiteBorder::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  width: 200%;
+  height: 200%;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: brightness(1.4);
+  background-image: conic-gradient(
+    transparent 0%,
+    #818cf8 3%,
+    transparent 12%,
+    transparent 45%,
+    #c084fc 52%,
+    transparent 62%
+  );
+  animation: rotateGlow 8s linear infinite;
+}
+
+/* Main border layer */
+.border {
+  composes: glowLayer;
+  filter: blur(0.5px);
+  border-radius: 12px;
+}
+
+.border::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  width: 200%;
+  height: 200%;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: brightness(1.3);
+  background-image: conic-gradient(
+    #1c1917 0%,
+    #4f46e5 5%,
+    #1c1917 14%,
+    #1c1917 45%,
+    #a855f7 55%,
+    #1c1917 64%
+  );
+  animation: rotateGlow 8s linear infinite;
+}
+
+/* Animation */
+@keyframes rotateGlow {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Hover state - speed up animation */
+.toolbarWrapper:hover .glow::before,
+.toolbarWrapper:hover .darkBorderBg::before,
+.toolbarWrapper:hover .whiteBorder::before,
+.toolbarWrapper:hover .border::before {
+  animation-duration: 4s;
+}
+
+/* Hover state - increase glow */
+.toolbarWrapper:hover .glow {
+  opacity: 0.7;
+}
+
+/* Focus within state - even more dramatic */
+.toolbarWrapper:focus-within .glow::before,
+.toolbarWrapper:focus-within .darkBorderBg::before,
+.toolbarWrapper:focus-within .whiteBorder::before,
+.toolbarWrapper:focus-within .border::before {
+  animation-duration: 3s;
+}
+
+.toolbarWrapper:focus-within .glow {
+  opacity: 0.8;
+}
+
+/* Inner content container */
+.toolbarContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 8px;
+  background-color: rgba(23, 23, 23, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  border: 1px solid rgba(64, 64, 64, 0.5);
+}
+
+/* Subtle inner shadow for depth */
+.toolbarContent::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}

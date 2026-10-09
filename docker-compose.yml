@@ -1,0 +1,68 @@
+version: "3.9"
+
+services:
+  # Production build
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: visual-editor-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+    # Security: Read-only filesystem where possible
+    read_only: true
+    tmpfs:
+      - /tmp
+    # Security: Drop all capabilities
+    cap_drop:
+      - ALL
+    # Security: No new privileges
+    security_opt:
+      - no-new-privileges:true
+    # Health check
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    networks:
+      - app-network
+
+  # Development with hot reload
+  app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: visual-editor-dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+      - WATCHPACK_POLLING=true
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - app-network
+    profiles:
+      - dev
+
+networks:
+  app-network:
+    driver: bridge

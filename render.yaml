@@ -1,0 +1,18 @@
+# Render Blueprint
+# Deploy: Connect repo in Render dashboard
+
+services:
+  - type: web
+    name: visual-editor-app
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    branch: main
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+      - key: NEXT_PUBLIC_API_URL
+        sync: false

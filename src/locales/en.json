@@ -1,0 +1,195 @@
+{
+  "common": {
+    "brand": {
+      "name": "plaart"
+    },
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "yes": "Yes",
+    "no": "No",
+    "retry": "Retry"
+  },
+  "editor": {
+    "title": "Visual Editor",
+    "canvas": "Canvas",
+    "layers": "Layers",
+    "properties": "Properties",
+    "tools": "Tools",
+    "zoom": "Zoom",
+    "undo": "Undo",
+    "redo": "Redo"
+  },
+  "messages": {
+    "saveSuccess": "Changes saved successfully",
+    "saveError": "Error saving changes",
+    "deleteConfirm": "Are you sure you want to delete this item?",
+    "unsavedChanges": "You have unsaved changes"
+  },
+  "home": {
+    "hero": {
+      "buttons": {
+        "btnStart": "Get started",
+        "btnDocs": "Watch Docs"
+      },
+      "header": {
+        "data": {
+          "title": "AI Drawing Assistant",
+          "mainText": "Draw with ",
+          "subtitle": "Learn, experiment, and explore the endless possibilities of creative\ncollaboration. Transform your artistic journey with intelligent drawing\nassistance that grows with you.",
+          "detail": "AI"
+        }
+      },
+      "content": {
+        "buttons": {
+          "btnGeneration": "Listening to your most artistic side..."
+        },
+        "canvas": {
+          "data": {
+            "title": "Start drawing with AI guidance",
+            "subtitle": "Sketch, learn, and explore together"
+          }
+        },
+        "learning": {
+          "indicator1": "Learning...",
+          "indicator2": "Adapting...",
+          "indicator3": "Improving...",
+          "indicator4": "Sketch...",
+          "indicator5": "Rendering..."
+        }
+      }
+    }
+  },
+  "auth": {
+    "navbar": {
+      "noAccount": "Don't have an account?",
+      "hasAccount": "Already have an account?",
+      "createAccount": "Create one",
+      "signIn": "Sign in"
+    },
+    "login": {
+      "title": "Welcome",
+      "subtitle": "We're happy to see you. Please sign in below.",
+      "google": "Continue with Google",
+      "divider": "or continue with email",
+      "fields": {
+        "email": {
+          "label": "Email:",
+          "placeholder": "Enter your email"
+        },
+        "password": {
+          "label": "Password:",
+          "placeholder": "Enter your password"
+        }
+      },
+      "submit": "Continue",
+      "loading": "Signing in...",
+      "noAccount": "Don't have an account?",
+      "register": "Sign up",
+      "links": {
+        "register": "Don't have an account? Sign up here"
+      }
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Start your creative journey today.",
+      "google": "Continue with Google",
+      "divider": "or register with email",
+      "fields": {
+        "name": {
+          "label": "Full Name:",
+          "placeholder": "Enter your name"
+        },
+        "email": {
+          "label": "Email:",
+          "placeholder": "Enter your email"
+        },
+        "password": {
+          "label": "Password:",
+          "placeholder": "Create a password"
+        },
+        "confirmPassword": {
+          "label": "Confirm Password:",
+          "placeholder": "Confirm your password"
+        }
+      },
+      "submit": "Create Account",
+      "loading": "Creating account...",
+      "hasAccount": "Already have an account?",
+      "login": "Sign in",
+      "links": {
+        "login": "Already have an account? Sign in here"
+      },
+      "validation": {
+        "name": "Name is required",
+        "name.minLength": "Name must be at least 2 characters",
+        "email": {
+          "required": "Email is required",
+          "invalid": "Invalid email format"
+        },
+        "password": {
+          "required": "Password is required",
+          "minLength": "Must be at least 8 characters"
+        },
+        "confirmPassword": {
+          "required": "Please confirm your password",
+          "mismatch": "Passwords do not match"
+        }
+      }
+    }
+  },
+  "workspace": {
+    "title": "My Projects",
+    "projectCount": "{count} project",
+    "projectCountPlural": "{count} projects",
+    "search": "Search projects...",
+    "newProject": "New Project",
+    "noProjects": {
+      "title": "No projects yet",
+      "description": "Create your first project to start designing",
+      "searchTitle": "No projects found",
+      "searchDescription": "Try a different search"
+    },
+    "project": {
+      "open": "Open",
+      "edit": "Edit",
+      "duplicate": "Duplicate",
+      "delete": "Delete",
+      "modified": "Modified {date}"
+    },
+    "modal": {
+      "createTitle": "Create new project",
+      "projectName": "Project name",
+      "projectNamePlaceholder": "My new project",
+      "create": "Create project",
+      "creating": "Creating..."
+    }
+  },
+  "errors": {
+    "network": "Network error. Please try again later.",
+    "unauthorized": "You are not authorized to perform this action.",
+    "notFound": "The requested resource was not found.",
+    "server": "An unexpected server error occurred. Please try again later.",
+    "insufficientPermissions": {
+      "title": "Insufficient Permissions",
+      "message": "You don't have permission to perform this action. Your account has a VIEWER role which only allows viewing projects. Please contact an administrator to upgrade your account to EDITOR role."
+    },
+    "authRequired": {
+      "title": "Session Expired",
+      "message": "Your session has expired. Please log in again."
+    },
+    "generic": {
+      "title": "Error"
+    }
+  }
+}

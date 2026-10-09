@@ -1,0 +1,195 @@
+{
+  "common": {
+    "brand": {
+      "name": "plaart"
+    },
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "search": "Buscar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "yes": "Sí",
+    "no": "No",
+    "retry": "Reintentar"
+  },
+  "editor": {
+    "title": "Editor Visual",
+    "canvas": "Lienzo",
+    "layers": "Capas",
+    "properties": "Propiedades",
+    "tools": "Herramientas",
+    "zoom": "Zoom",
+    "undo": "Deshacer",
+    "redo": "Rehacer"
+  },
+  "messages": {
+    "saveSuccess": "Cambios guardados correctamente",
+    "saveError": "Error al guardar los cambios",
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar este elemento?",
+    "unsavedChanges": "Tienes cambios sin guardar"
+  },
+  "home": {
+    "hero": {
+      "buttons": {
+        "btnStart": "Comenzar",
+        "btnDocs": "Ver Documentación"
+      },
+      "header": {
+        "data": {
+          "title": "Asistente de Dibujo con IA",
+          "mainText": "Dibuja con ",
+          "subtitle": "Aprende, experimenta y explora las infinitas posibilidades de colaboración\ncreativa. Transforma tu viaje artístico con asistencia de dibujo\ninteligente que crece contigo.",
+          "detail": "IA"
+        }
+      },
+      "content": {
+        "buttons": {
+          "btnGeneration": "Escuchando tu lado más artístico..."
+        },
+        "canvas": {
+          "data": {
+            "title": "Comienza a dibujar con guía de IA",
+            "subtitle": "Bosqueja, aprende y explora juntos"
+          }
+        },
+        "learning": {
+          "indicator1": "Aprendiendo...",
+          "indicator2": "Adaptándose...",
+          "indicator3": "Mejorando...",
+          "indicator4": "Bosquejando...",
+          "indicator5": "Renderizando..."
+        }
+      }
+    }
+  },
+  "auth": {
+    "navbar": {
+      "noAccount": "¿No tienes una cuenta?",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "createAccount": "Crear una",
+      "signIn": "Iniciar sesión"
+    },
+    "login": {
+      "title": "Bienvenido",
+      "subtitle": "Nos alegra verte. Por favor inicia sesión.",
+      "google": "Continuar con Google",
+      "divider": "o continúa con email",
+      "fields": {
+        "email": {
+          "label": "Email:",
+          "placeholder": "Ingresa tu email"
+        },
+        "password": {
+          "label": "Contraseña:",
+          "placeholder": "Ingresa tu contraseña"
+        }
+      },
+      "submit": "Continuar",
+      "loading": "Iniciando sesión...",
+      "noAccount": "¿No tienes una cuenta?",
+      "register": "Regístrate",
+      "links": {
+        "register": "¿No tienes cuenta? Regístrate aquí"
+      }
+    },
+    "register": {
+      "title": "Crear Cuenta",
+      "subtitle": "Comienza tu viaje creativo hoy.",
+      "google": "Continuar con Google",
+      "divider": "o regístrate con email",
+      "fields": {
+        "name": {
+          "label": "Nombre completo:",
+          "placeholder": "Ingresa tu nombre"
+        },
+        "email": {
+          "label": "Email:",
+          "placeholder": "Ingresa tu email"
+        },
+        "password": {
+          "label": "Contraseña:",
+          "placeholder": "Crea una contraseña"
+        },
+        "confirmPassword": {
+          "label": "Confirmar contraseña:",
+          "placeholder": "Confirma tu contraseña"
+        }
+      },
+      "submit": "Crear cuenta",
+      "loading": "Creando cuenta...",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "login": "Iniciar sesión",
+      "links": {
+        "login": "¿Ya tienes cuenta? Inicia sesión aquí"
+      },
+      "validation": {
+        "name": "El nombre es requerido",
+        "name.minLength": "El nombre debe tener al menos 2 caracteres",
+        "email": {
+          "required": "El email es requerido",
+          "invalid": "Email inválido"
+        },
+        "password": {
+          "required": "La contraseña es requerida",
+          "minLength": "Debe tener al menos 8 caracteres"
+        },
+        "confirmPassword": {
+          "required": "Confirma tu contraseña",
+          "mismatch": "Las contraseñas no coinciden"
+        }
+      }
+    }
+  },
+  "workspace": {
+    "title": "Mis Proyectos",
+    "projectCount": "{count} proyecto",
+    "projectCountPlural": "{count} proyectos",
+    "search": "Buscar proyectos...",
+    "newProject": "Nuevo Proyecto",
+    "noProjects": {
+      "title": "No tienes proyectos aún",
+      "description": "Crea tu primer proyecto para empezar a diseñar",
+      "searchTitle": "No se encontraron proyectos",
+      "searchDescription": "Intenta con otra búsqueda"
+    },
+    "project": {
+      "open": "Abrir",
+      "edit": "Editar",
+      "duplicate": "Duplicar",
+      "delete": "Eliminar",
+      "modified": "Modificado {date}"
+    },
+    "modal": {
+      "createTitle": "Crear nuevo proyecto",
+      "projectName": "Nombre del proyecto",
+      "projectNamePlaceholder": "Mi nuevo proyecto",
+      "create": "Crear proyecto",
+      "creating": "Creando..."
+    }
+  },
+  "errors": {
+    "network": "Error de red. Por favor intenta más tarde.",
+    "unauthorized": "No tienes autorización para realizar esta acción.",
+    "notFound": "El recurso solicitado no fue encontrado.",
+    "server": "Ocurrió un error inesperado en el servidor. Por favor intenta más tarde.",
+    "insufficientPermissions": {
+      "title": "Permisos Insuficientes",
+      "message": "No tienes permiso para realizar esta acción. Tu cuenta tiene el rol VIEWER que solo permite ver proyectos. Por favor contacta a un administrador para actualizar tu cuenta al rol EDITOR."
+    },
+    "authRequired": {
+      "title": "Sesión Expirada",
+      "message": "Tu sesión ha expirado. Por favor inicia sesión nuevamente."
+    },
+    "generic": {
+      "title": "Error"
+    }
+  }
+}
