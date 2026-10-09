@@ -29,13 +29,7 @@ function checkRateLimit(key: string): { allowed: boolean; remaining: number } {
   return { allowed: true, remaining: MAX_REQUESTS - entry.count };
 }
 
-// Protected routes that require authentication
-const protectedRoutes = ["/editor", "/workspace"];
-
-// Public routes that don't need protection
-const publicRoutes = ["/", "/auth/login", "/auth/register"];
-
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const response = NextResponse.next();
 
@@ -67,25 +61,7 @@ export function middleware(request: NextRequest) {
   response.headers.set("X-RateLimit-Limit", MAX_REQUESTS.toString());
   response.headers.set("X-RateLimit-Remaining", remaining.toString());
 
-  // Check authentication for protected routes
-  const isProtectedRoute = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
-  );
-
-  if (isProtectedRoute) {
-    // Check for auth token in cookies
-    const token = request.cookies.get("auth_token")?.value;
-
-    if (!token) {
-      // Redirect to login if no token
-      const loginUrl = new URL("/auth/login", request.url);
-      loginUrl.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-
-    // Note: In production, validate the token here
-    // For now, we just check if it exists
-  }
+  // Auth is checked client-side (ProtectedRoute): tokens live in localStorage, which the server cannot see
 
   // Security headers for all routes (additional to next.config.ts)
   response.headers.set("X-DNS-Prefetch-Control", "off");

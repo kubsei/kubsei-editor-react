@@ -1,10 +1,7 @@
 // GraphQL client configuration for backend integration
+import { API_URL, getAccessToken, refreshSession } from "@/lib/api/authService";
 
-const GRAPHQL_ENDPOINT = process.env.NEXT_PUBLIC_API_URL
-  ? `${process.env.NEXT_PUBLIC_API_URL}/graphql`
-  : "http://localhost:3001/graphql";
-
-const TOKEN_KEY = "visual-editor-token";
+const GRAPHQL_ENDPOINT = `${API_URL}/graphql`;
 
 interface GraphQLError {
   message: string;
@@ -18,12 +15,6 @@ interface GraphQLResponse<T = unknown> {
   errors?: GraphQLError[];
 }
 
-// Get token from localStorage
-const getToken = (): string | null => {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem(TOKEN_KEY);
-};
-
 export class GraphQLClient {
   private endpoint: string;
 
@@ -31,13 +22,11 @@ export class GraphQLClient {
     this.endpoint = endpoint;
   }
 
-  private getHeaders(): HeadersInit {
+  private getHeaders(token: string | null): HeadersInit {
     const headers: HeadersInit = {
       "Content-Type": "application/json",
     };
 
-    const token = getToken();
-    console.log("[GraphQL Client] Token:", token ? `present (length: ${token.length})` : "null");
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;
     }
@@ -49,14 +38,25 @@ export class GraphQLClient {
     query: string,
     variables?: V
   ): Promise<T> {
-    const response = await fetch(this.endpoint, {
-      method: "POST",
-      headers: this.getHeaders(),
-      body: JSON.stringify({
-        query,
-        variables,
-      }),
-    });
+    const send = (token: string | null) =>
+      fetch(this.endpoint, {
+        method: "POST",
+        headers: this.getHeaders(token),
+        body: JSON.stringify({
+          query,
+          variables,
+        }),
+      });
+
+    let response = await send(getAccessToken());
+
+    // The gateway answers 401 to an expired access token: refresh once and retry
+    if (response.status === 401) {
+      const newToken = await refreshSession();
+      if (newToken) {
+        response = await send(newToken);
+      }
+    }
 
     if (!response.ok) {
       if (response.status === 401) {

@@ -2,10 +2,8 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { LoginRequest, RegisterRequest, User, AuthResponse } from "@/types/auth";
-import * as authService from "@/lib/graphql/authService";
-
-const TOKEN_KEY = "visual-editor-token";
-const REFRESH_TOKEN_KEY = "visual-editor-refresh-token";
+import * as authService from "@/lib/api/authService";
+import { getAccessToken, getRefreshToken, setTokens, removeTokens } from "@/lib/api/authService";
 
 interface AuthState {
   user: User | null;
@@ -13,41 +11,6 @@ interface AuthState {
   isLoading: boolean;
   error: string | null;
 }
-
-// Token helpers
-const setTokens = (accessToken: string, refreshToken: string) => {
-  if (typeof window !== "undefined") {
-    console.log("[Auth] Setting tokens:", {
-      accessToken: accessToken ? `present (${accessToken.length} chars)` : "null",
-      refreshToken: refreshToken ? `present (${refreshToken.length} chars)` : "null"
-    });
-    localStorage.setItem(TOKEN_KEY, accessToken);
-    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-    // Verify tokens were saved
-    console.log("[Auth] Tokens saved. Verification:", {
-      accessToken: localStorage.getItem(TOKEN_KEY) ? "saved" : "NOT SAVED",
-      refreshToken: localStorage.getItem(REFRESH_TOKEN_KEY) ? "saved" : "NOT SAVED"
-    });
-  }
-};
-
-const getAccessToken = (): string | null => {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem(TOKEN_KEY);
-};
-
-const getRefreshToken = (): string | null => {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem(REFRESH_TOKEN_KEY);
-};
-
-const removeTokens = () => {
-  if (typeof window !== "undefined") {
-    console.log("[Auth] Removing tokens");
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
-  }
-};
 
 export const useAuth = () => {
   const router = useRouter();
@@ -63,9 +26,6 @@ export const useAuth = () => {
   // Check authentication status on mount and handle OAuth callback
   useEffect(() => {
     const checkAuth = async () => {
-      console.log("[Auth] checkAuth running. Current URL:", window.location.href);
-      console.log("[Auth] Current localStorage token:", localStorage.getItem(TOKEN_KEY) ? "present" : "null");
-      console.log("[Auth] isProcessingOAuth:", isProcessingOAuth.current);
 
       // Check if we have tokens from OAuth callback in URL
       const accessTokenFromUrl = searchParams.get("accessToken");
@@ -121,7 +81,6 @@ export const useAuth = () => {
       }
 
       const token = getAccessToken();
-      const refreshTokenValue = getRefreshToken();
 
       if (!token) {
         setAuthState({
@@ -143,36 +102,18 @@ export const useAuth = () => {
           error: null,
         });
       } catch {
-        // Token might be expired, try to refresh
-        if (refreshTokenValue) {
-          try {
-            const response = await authService.refreshToken(refreshTokenValue);
-            setTokens(response.accessToken, response.refreshToken);
-            setAuthState({
-              user: response.user,
-              isAuthenticated: true,
-              isLoading: false,
-              error: null,
-            });
-          } catch {
-            // Refresh failed, clear tokens
-            removeTokens();
-            setAuthState({
-              user: null,
-              isAuthenticated: false,
-              isLoading: false,
-              error: null,
-            });
-          }
-        } else {
+        // Token might be expired: refresh (clears tokens if it fails) and retry
+        const newToken = await authService.refreshSession();
+        const user = newToken ? await authService.getMe(newToken).catch(() => null) : null;
+        if (!user) {
           removeTokens();
-          setAuthState({
-            user: null,
-            isAuthenticated: false,
-            isLoading: false,
-            error: null,
-          });
         }
+        setAuthState({
+          user,
+          isAuthenticated: !!user,
+          isLoading: false,
+          error: null,
+        });
       }
     };
 

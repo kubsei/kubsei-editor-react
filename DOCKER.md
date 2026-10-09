@@ -75,7 +75,7 @@ cp .env.example .env.local
 ```
 
 Required variables:
-- `NEXT_PUBLIC_API_URL`: Backend GraphQL endpoint
+- `NEXT_PUBLIC_API_URL`: kubsei-gateway base URL (REST auth + `/graphql`)
 - `NEXT_PUBLIC_WS_URL`: WebSocket endpoint for real-time features
 
 ## Building for Different Environments
@@ -173,4 +173,4 @@ Check logs: `docker logs visual-editor-app`
 Verify the application is listening on port 3000 and responding to requests.
 
 ### Rate limiting too aggressive
-Adjust `MAX_REQUESTS` in `src/middleware.ts`.
+Adjust `MAX_REQUESTS` in `src/proxy.ts`.

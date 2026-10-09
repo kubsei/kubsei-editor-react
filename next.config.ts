@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
 
+// kubsei-gateway origin: the browser calls it directly (REST auth + GraphQL), so CSP must allow it
+const apiOrigin = new URL(process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001").origin;
+
 // Security headers configuration
 const securityHeaders = [
   // Prevent XSS attacks
@@ -41,7 +44,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
       "font-src 'self' data:",
-      "connect-src 'self' https: wss:",
+      `connect-src 'self' ${apiOrigin} https: wss:`,
       "frame-ancestors 'self'",
       "form-action 'self'",
       "base-uri 'self'",
