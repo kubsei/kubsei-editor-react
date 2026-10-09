@@ -1,7 +1,17 @@
 "use client";
 import useIntl from "@/hooks/useIntl";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useSyncExternalStore } from "react";
+
+const generatePositions = () =>
+  [...Array(8)].map(() => ({
+    left: Math.random() * 100,
+    top: Math.random() * 100,
+    xOffset: Math.random() * 20 - 10,
+    duration: 4 + Math.random() * 2,
+  }));
+
+const noSubscribe = () => () => {};
 
 const FloatingElements = () => {
   const getColorClass = (index: number): string => {
@@ -18,20 +28,10 @@ const FloatingElements = () => {
     t("home.hero.content.learning.indicator5"),
   ];
 
-  const [randomPositions, setRandomPositions] = useState<
-    { left: number; top: number; xOffset: number; duration: number }[]
-  >([]);
-
-  useEffect(() => {
-    setRandomPositions(
-      [...Array(8)].map(() => ({
-        left: Math.random() * 100,
-        top: Math.random() * 100,
-        xOffset: Math.random() * 20 - 10,
-        duration: 4 + Math.random() * 2,
-      }))
-    );
-  }, []);
+  // Random positions only in the browser: the server render must not depend on them (hydration)
+  const isClient = useSyncExternalStore(noSubscribe, () => true, () => false);
+  const [positions] = useState(generatePositions);
+  const randomPositions = isClient ? positions : [];
   return (
     <div>
       <>

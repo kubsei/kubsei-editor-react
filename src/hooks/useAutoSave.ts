@@ -65,14 +65,12 @@ export function useAutoSave({ projectId, enabled = true }: UseAutoSaveOptions) {
   // Editor state para guardar - usando refs para evitar re-renders
   const editorState = useSelector((state: RootState) => state.editor);
   const editorStateRef = useRef(editorState);
-  editorStateRef.current = editorState;
 
   // Refs para evitar stale closures y ciclos
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const retryTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isOnlineRef = useRef(typeof navigator !== 'undefined' ? navigator.onLine : true);
   const projectIdRef = useRef(projectId);
-  projectIdRef.current = projectId;
 
   // ============ BACKUP LOCAL ============
   // Nota: saveLocalBackup NO hace dispatch para evitar ciclos de re-render
@@ -132,12 +130,42 @@ export function useAutoSave({ projectId, enabled = true }: UseAutoSaveOptions) {
     }
   }, []);
 
+  // ============ RETRY LOGIC ============
+
+  // Ref para el retry count (evitamos stale closures)
+  const retryCountRef = useRef(0);
+
+  // Actualizar ref cuando cambia el selector
+  const syncState = useSelector((state: RootState) => state.sync);
+  useEffect(() => {
+    retryCountRef.current = syncState.retryCount;
+  }, [syncState.retryCount]);
+
+  // Kept current by the effect below; breaks the saveToServer <-> scheduleRetry cycle
+  const saveToServerRef = useRef<() => Promise<void>>(async () => {});
+
+  const scheduleRetry = useCallback(() => {
+    // Limpiar retry anterior
+    if (retryTimerRef.current) {
+      clearTimeout(retryTimerRef.current);
+    }
+
+    // Backoff exponencial: 2s, 4s, 8s, 16s, max 30s
+    const delay = Math.min(2000 * Math.pow(2, retryCountRef.current), MAX_RETRY_DELAY);
+
+    console.log(`[AutoSave] Scheduling retry in ${delay}ms`);
+
+    retryTimerRef.current = setTimeout(() => {
+      if (isOnlineRef.current) {
+        saveToServerRef.current();
+      }
+    }, delay);
+  }, []);
+
   // ============ SAVE TO SERVER ============
   // Refs para evitar dependencias en saveToServer
   const isDirtyRef = useRef(isDirty);
-  isDirtyRef.current = isDirty;
   const canRetryRef = useRef(canRetry);
-  canRetryRef.current = canRetry;
 
   const saveToServer = useCallback(async () => {
     const pid = projectIdRef.current;
@@ -180,41 +208,11 @@ export function useAutoSave({ projectId, enabled = true }: UseAutoSaveOptions) {
         scheduleRetry();
       }
     }
-  }, [saveProjectMutation, dispatch, clearLocalBackup]);
-
-  // ============ RETRY LOGIC ============
-
-  // Ref para el retry count (evitamos stale closures)
-  const retryCountRef = useRef(0);
-
-  // Actualizar ref cuando cambia el selector
-  const syncState = useSelector((state: RootState) => state.sync);
-  useEffect(() => {
-    retryCountRef.current = syncState.retryCount;
-  }, [syncState.retryCount]);
-
-  const scheduleRetry = useCallback(() => {
-    // Limpiar retry anterior
-    if (retryTimerRef.current) {
-      clearTimeout(retryTimerRef.current);
-    }
-
-    // Backoff exponencial: 2s, 4s, 8s, 16s, max 30s
-    const delay = Math.min(2000 * Math.pow(2, retryCountRef.current), MAX_RETRY_DELAY);
-
-    console.log(`[AutoSave] Scheduling retry in ${delay}ms`);
-
-    retryTimerRef.current = setTimeout(() => {
-      if (isOnlineRef.current) {
-        saveToServer();
-      }
-    }, delay);
-  }, [saveToServer]);
+  }, [saveProjectMutation, dispatch, clearLocalBackup, scheduleRetry]);
 
   // ============ DEBOUNCED SAVE ============
-  // Ref para saveToServer para usar en debouncedSave sin dependencia
-  const saveToServerRef = useRef(saveToServer);
-  saveToServerRef.current = saveToServer;
+  // Kept current by the effect below, so its timer can re-schedule itself
+  const debouncedSaveRef = useRef<() => void>(() => {});
 
   const debouncedSave = useCallback(() => {
     // Limpiar timer anterior
@@ -231,7 +229,7 @@ export function useAutoSave({ projectId, enabled = true }: UseAutoSaveOptions) {
       const state = editorStateRef.current;
       if (state.isDrawing) {
         // Re-programar para cuando termine
-        debouncedSave();
+        debouncedSaveRef.current();
         return;
       }
 
@@ -239,11 +237,18 @@ export function useAutoSave({ projectId, enabled = true }: UseAutoSaveOptions) {
     }, DEBOUNCE_MS);
   }, [saveLocalBackup]); // Solo depende de saveLocalBackup que es estable
 
-  // Ref para debouncedSave para usar en effects sin causar re-ejecución
-  const debouncedSaveRef = useRef(debouncedSave);
-  debouncedSaveRef.current = debouncedSave;
-
   // ============ EFFECTS ============
+
+  // Keep the "latest value" refs current (refs must not be written during render).
+  // Declared first, so the effects below already see this render's values.
+  useEffect(() => {
+    editorStateRef.current = editorState;
+    projectIdRef.current = projectId;
+    isDirtyRef.current = isDirty;
+    canRetryRef.current = canRetry;
+    saveToServerRef.current = saveToServer;
+    debouncedSaveRef.current = debouncedSave;
+  });
 
   // Inicializar sync state cuando cambia el proyecto
   useEffect(() => {

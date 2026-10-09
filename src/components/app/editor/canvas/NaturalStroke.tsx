@@ -84,7 +84,7 @@ const NaturalStroke = memo(function NaturalStroke({
         x: rawPoints[i],
         y: rawPoints[i + 1],
         pressure: pressureData[pointIndex] ?? 0.5,
-        timestamp: Date.now() + pointIndex * 16, // Simular timestamps
+        timestamp: pointIndex * 16, // Simulated ~60fps timestamps: only the deltas matter
       });
     }
 

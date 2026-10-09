@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -35,6 +36,13 @@ export function SyncStatusIndicator({ onRetry, className = '' }: SyncStatusIndic
   const lastSyncedAt = useSelector(selectLastSyncedAt);
   const syncError = useSelector(selectSyncError);
   const canRetry = useSelector(selectCanRetry);
+
+  // Clock for the "Xm ago" label, ticking so it stays current without reading Date.now() during render
+  const [now, setNow] = useState(Date.now);
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 30_000);
+    return () => clearInterval(id);
+  }, []);
 
   const getStatusConfig = (status: SyncStatus) => {
     switch (status) {
@@ -97,7 +105,7 @@ export function SyncStatusIndicator({ onRetry, className = '' }: SyncStatusIndic
   const getLastSavedText = () => {
     if (!lastSyncedAt) return null;
 
-    const diff = Date.now() - lastSyncedAt;
+    const diff = Math.max(0, now - lastSyncedAt);
     const seconds = Math.floor(diff / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);

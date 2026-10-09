@@ -80,7 +80,7 @@ const CanvasVisualizer = forwardRef<CanvasVisualizerRef>((_, ref) => {
           tool={tool}
         />
       </Stage>
-      <TextInputOverlay containerRef={containerRef} />
+      <TextInputOverlay />
     </div>
   );
 });

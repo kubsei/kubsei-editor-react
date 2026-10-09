@@ -7,11 +7,8 @@ import {
 import { TextElement } from "@/types/editor";
 import { Check, X } from "lucide-react";
 
-interface TextInputOverlayProps {
-  containerRef: React.RefObject<HTMLDivElement | null>;
-}
-
-const TextInputOverlay = ({ containerRef }: TextInputOverlayProps) => {
+// Rendered inside the canvas container, so it is positioned relative to it
+const TextInputOverlay = () => {
   const dispatch = useAppDispatch();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -81,7 +78,7 @@ const TextInputOverlay = ({ containerRef }: TextInputOverlayProps) => {
     dispatch(finishTextEditing());
   }, [dispatch, textEditing.elementId]);
 
-  if (!textEditing.isEditing || !textEditing.position || !containerRef.current) {
+  if (!textEditing.isEditing || !textEditing.position) {
     return null;
   }
 

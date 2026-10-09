@@ -25,6 +25,12 @@ export const removeTokens = () => {
   localStorage.removeItem(REFRESH_TOKEN_KEY);
 };
 
+/** For useSyncExternalStore: re-read the token when another tab logs in or out. */
+export const subscribeTokens = (onChange: () => void) => {
+  window.addEventListener("storage", onChange);
+  return () => window.removeEventListener("storage", onChange);
+};
+
 // Errors come back as RFC 9457 problem details: { title, status, detail }
 async function request<T>(path: string, init: RequestInit = {}, token?: string): Promise<T> {
   const headers: Record<string, string> = { "Content-Type": "application/json" };

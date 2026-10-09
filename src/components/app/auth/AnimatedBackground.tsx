@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
 
 // Helper function to generate random values (called outside render)
@@ -19,7 +19,17 @@ const generateGridLines = () =>
     left: Math.random() * 100,
     height: Math.random() * 30 + 10,
     delay: Math.random() * 2,
+    duration: 8 + Math.random() * 4,
   }));
+
+const generateParticles = () =>
+  [...Array(6)].map(() => ({
+    left: 50 + Math.random() * 150,
+    top: 50 + Math.random() * 150,
+    duration: 3 + Math.random() * 2,
+  }));
+
+const noSubscribe = () => () => {};
 
 // Componente de fondo animado moderno
 export const AnimatedBackground = ({ type = "login" }) => {
@@ -28,6 +38,9 @@ export const AnimatedBackground = ({ type = "login" }) => {
   // Use useState with initializer function to generate values once
   const [floatingElements] = useState(generateFloatingElements);
   const [gridLines] = useState(generateGridLines);
+  const [particles] = useState(generateParticles);
+  // Random shapes only in the browser: server and client would generate different values (hydration)
+  const isClient = useSyncExternalStore(noSubscribe, () => true, () => false);
 
   return (
     <div className="min-h-screen relative w-full bg-black overflow-hidden">
@@ -43,7 +56,7 @@ export const AnimatedBackground = ({ type = "login" }) => {
 
       {/* Floating geometric shapes */}
       <div className="absolute inset-0">
-        {floatingElements.map((element, i) => (
+        {isClient && floatingElements.map((element, i) => (
           <motion.div
             key={i}
             className="absolute rounded-full border border-white/10"
@@ -71,7 +84,7 @@ export const AnimatedBackground = ({ type = "login" }) => {
 
       {/* Animated vertical lines */}
       <div className="absolute inset-0">
-        {gridLines.map((line, i) => (
+        {isClient && gridLines.map((line, i) => (
           <motion.div
             key={i}
             className="absolute w-px bg-gradient-to-b from-transparent via-white/10 to-transparent"
@@ -84,7 +97,7 @@ export const AnimatedBackground = ({ type = "login" }) => {
               opacity: [0, 0.5, 0],
             }}
             transition={{
-              duration: 8 + Math.random() * 4,
+              duration: line.duration,
               repeat: Infinity,
               delay: line.delay,
               ease: "linear",
@@ -216,13 +229,13 @@ export const AnimatedBackground = ({ type = "login" }) => {
             />
 
             {/* Floating particles */}
-            {[...Array(6)].map((_, i) => (
+            {isClient && particles.map((particle, i) => (
               <motion.div
                 key={`particle-${i}`}
                 className="absolute w-1 h-1 rounded-full bg-white/40"
                 style={{
-                  left: `${50 + Math.random() * 150}px`,
-                  top: `${50 + Math.random() * 150}px`,
+                  left: `${particle.left}px`,
+                  top: `${particle.top}px`,
                 }}
                 animate={{
                   y: [0, -30, 0],
@@ -230,7 +243,7 @@ export const AnimatedBackground = ({ type = "login" }) => {
                   scale: [1, 1.5, 1],
                 }}
                 transition={{
-                  duration: 3 + Math.random() * 2,
+                  duration: particle.duration,
                   repeat: Infinity,
                   delay: i * 0.4,
                   ease: "easeOut",

@@ -1,19 +1,12 @@
 "use client";
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useSyncExternalStore, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { getAccessToken, subscribeTokens } from "@/lib/api/authService";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
   loadingComponent?: React.ReactNode;
 }
-
-const TOKEN_KEY = "visual-editor-token";
-
-// Helper to get token from localStorage
-const getAccessToken = (): string | null => {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem(TOKEN_KEY);
-};
 
 // Default loading component
 const DefaultLoading = () => (
@@ -26,30 +19,19 @@ const DefaultLoading = () => (
 const ProtectedRouteInner = ({ children, loadingComponent }: ProtectedRouteProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  // undefined on the server and during hydration: localStorage only exists in the browser
+  const token = useSyncExternalStore(subscribeTokens, getAccessToken, () => undefined);
+  // Tokens coming from the OAuth callback in the URL are stored by useAuth: don't redirect meanwhile
+  const fromOAuth = !!searchParams.get("accessToken");
 
   useEffect(() => {
-    // Check if we have tokens coming from OAuth callback in URL
-    const accessTokenFromUrl = searchParams.get("accessToken");
-
-    // If we have token in URL, let useAuth handle it - don't redirect
-    if (accessTokenFromUrl) {
-      setIsAuthenticated(true);
-      return;
-    }
-
-    // Check localStorage for existing token
-    const token = getAccessToken();
-
-    if (!token) {
+    if (token === null && !fromOAuth) {
       router.replace("/auth/login");
-    } else {
-      setIsAuthenticated(true);
     }
-  }, [router, searchParams]);
+  }, [token, fromOAuth, router]);
 
-  // Show loading while checking auth
-  if (isAuthenticated === null) {
+  // Show loading while checking auth (or while redirecting)
+  if (!token && !fromOAuth) {
     return <>{loadingComponent || <DefaultLoading />}</>;
   }
 

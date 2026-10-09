@@ -21,7 +21,7 @@
  * ```
  */
 
-import { useCallback, useRef, useState, useMemo } from 'react';
+import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { useStabilizer } from './useStabilizer';
 import {
   BrushConfig,
@@ -141,8 +141,10 @@ export function useBrushEngine(
     );
   }, [config.texture]);
 
-  // Actualizar ref de textura
-  texturePatternRef.current = texturePattern;
+  // Actualizar ref de textura (en un efecto: las refs no se escriben durante el render)
+  useEffect(() => {
+    texturePatternRef.current = texturePattern;
+  }, [texturePattern]);
 
   // ============ HELPERS ============
 
@@ -280,7 +282,7 @@ export function useBrushEngine(
     if (!state.isDrawing) return;
 
     // Agregar punto final
-    let point = extractPoint(e);
+    const point = extractPoint(e);
 
     // Catch-up del stabilizer
     if (config.stabilizer.enabled && config.stabilizer.catchUp) {
