@@ -6,6 +6,7 @@ import useIntl from "@/hooks/useIntl";
 import type { LoginRequest } from "@/types/auth/LoginRequest";
 import { Eye, EyeOff, Mail } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 // Google Icon Component
 const GoogleIcon = () => (
@@ -34,6 +35,11 @@ const GoogleIcon = () => (
 export const LoginForm = () => {
   const { login, loginWithGoogle, error: authError, clearError } = useAuth();
   const { t } = useIntl();
+  const searchParams = useSearchParams();
+
+  // kubsei-users sends a failed Google login back here with ?error=true
+  const [googleFailed, setGoogleFailed] = useState(() => searchParams.has("error"));
+  const errorMessage = authError ?? (googleFailed ? t("auth.login.googleError") : null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -45,6 +51,7 @@ export const LoginForm = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     clearError();
+    setGoogleFailed(false);
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -112,12 +119,12 @@ export const LoginForm = () => {
         </div>
 
         {/* Error Message */}
-        {authError && (
+        {errorMessage && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
-            {authError}
+            {errorMessage}
           </motion.div>
         )}
 
