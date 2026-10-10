@@ -260,12 +260,9 @@ vercel env add NEXT_PUBLIC_API_URL
 
 Para que el CI/CD funcione, configura estos secrets en GitHub:
 
-### Para Frontend (visual-editor2d-app)
-```
-VERCEL_TOKEN        # De vercel.com/account/tokens
-VERCEL_ORG_ID       # De .vercel/project.json
-VERCEL_PROJECT_ID   # De .vercel/project.json
-```
+### Para Frontend (kubsei-editor-react)
+Ninguno: Vercel despliega con su integración de GitHub (push a `main` = producción, PR = preview).
+`NEXT_PUBLIC_API_URL` se configura en Vercel → Settings → Environment Variables.
 
 ### Para Backend (ms-visual-editor2d-java)
 ```
