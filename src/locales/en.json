@@ -98,7 +98,8 @@
       "register": "Sign up",
       "links": {
         "register": "Don't have an account? Sign up here"
-      }
+      },
+      "googleError": "We couldn't sign you in with Google. Please try again or use your email."
     },
     "register": {
       "title": "Create Account",
@@ -190,6 +191,163 @@
     },
     "generic": {
       "title": "Error"
+    }
+  },
+  "legal": {
+    "links": {
+      "privacy": "Privacy",
+      "terms": "Terms"
+    },
+    "updated": "Last updated: {date}",
+    "date": "October 10, 2026",
+    "backHome": "Back to home",
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro": "This policy explains what personal data we process when you use plaart (plaart.app), why, and what rights you have.",
+      "sections": [
+        {
+          "title": "1. Controller",
+          "paragraphs": [
+            "The data controller is {controller}. For any privacy question you can write to {email}."
+          ]
+        },
+        {
+          "title": "2. What data we process",
+          "items": [
+            "Account data: email, name and password. The password is stored hashed, never in plain text.",
+            "If you sign in with Google: your Google account identifier, name, email and profile picture. We never receive your Google password.",
+            "Session data: the IP address and browser or device information of each session, to protect your account.",
+            "Your content: the projects and drawings you create, with their thumbnails."
+          ]
+        },
+        {
+          "title": "3. Why we use it and legal basis",
+          "items": [
+            "Providing the service (creating your account, signing you in and saving your projects): performance of the contract you accept when you sign up (Art. 6(1)(b) GDPR).",
+            "Keeping accounts secure and detecting unauthorized access: legitimate interest (Art. 6(1)(f) GDPR)."
+          ],
+          "paragraphs": [
+            "We do not sell your data, use it for advertising or build commercial profiles."
+          ]
+        },
+        {
+          "title": "4. How long we keep it",
+          "items": [
+            "Account data and projects: for as long as your account exists. If you ask us to delete them, we do.",
+            "Session data: sessions last 7 days and are deleted automatically shortly after they expire."
+          ]
+        },
+        {
+          "title": "5. Who we share it with",
+          "paragraphs": [
+            "Only with the providers we need to run plaart, who process the data on our instructions:"
+          ],
+          "items": [
+            "MongoDB Atlas: database, hosted in Frankfurt (Germany).",
+            "Hetzner Online: servers, in Germany.",
+            "Vercel: website hosting.",
+            "Google: sign-in, only if you choose to sign in with Google."
+          ]
+        },
+        {
+          "title": "6. International transfers",
+          "paragraphs": [
+            "Some providers (Vercel and Google) may process data outside the European Economic Area. When they do, it is under the safeguards the GDPR requires, such as the EU-U.S. Data Privacy Framework or the European Commission's Standard Contractual Clauses."
+          ]
+        },
+        {
+          "title": "7. Storage in your browser",
+          "paragraphs": [
+            "We do not use advertising or analytics cookies. We keep in your browser's local storage only what the app needs to work: your session credentials and backups of the projects you are editing. During Google sign-in the server uses a temporary technical cookie. All of this is strictly necessary to provide the service."
+          ]
+        },
+        {
+          "title": "8. Your rights",
+          "paragraphs": [
+            "You can ask to access, correct or delete your data, object to or restrict its processing, and request its portability. Write to {email} and we will reply within one month.",
+            "If you believe we have not handled your request properly, you can lodge a complaint with the Spanish Data Protection Agency (www.aepd.es) or your local supervisory authority."
+          ]
+        },
+        {
+          "title": "9. Children",
+          "paragraphs": [
+            "plaart is not intended for children under 14, who must not create an account."
+          ]
+        },
+        {
+          "title": "10. Changes",
+          "paragraphs": [
+            "If we change this policy in a meaningful way, we will let you know in the app or by email before the change takes effect."
+          ]
+        }
+      ]
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "intro": "These terms govern your use of plaart (plaart.app), provided by {controller}. By creating an account or using the service you accept them.",
+      "sections": [
+        {
+          "title": "1. Your account",
+          "items": [
+            "You must be at least 14 years old.",
+            "The information you give us must be accurate.",
+            "You are responsible for keeping your password safe and for what happens under your account."
+          ]
+        },
+        {
+          "title": "2. Acceptable use",
+          "paragraphs": [
+            "When using plaart you agree not to:"
+          ],
+          "items": [
+            "Create or share illegal content, or content that infringes the rights of others, including intellectual property.",
+            "Try to access accounts or data that are not yours, or attack or overload the service.",
+            "Use the service in an automated or bulk way without our permission."
+          ]
+        },
+        {
+          "title": "3. Your content",
+          "paragraphs": [
+            "The projects and drawings you create are yours. You only give us the permission needed to store them and show them to you, and to show them to others when you mark them as public."
+          ]
+        },
+        {
+          "title": "4. The service",
+          "paragraphs": [
+            "plaart is under active development: features may change, be added or be removed, and there may be interruptions. We do our best to protect your work, but we recommend keeping copies of anything that matters to you."
+          ]
+        },
+        {
+          "title": "5. Liability",
+          "paragraphs": [
+            "To the extent permitted by law, we are not liable for indirect damages or loss of content. Nothing in these terms limits the rights consumer protection law gives you."
+          ]
+        },
+        {
+          "title": "6. Suspension and closing your account",
+          "paragraphs": [
+            "You can stop using plaart at any time and ask us to delete your account by writing to {email}. We may suspend or close accounts that breach these terms."
+          ]
+        },
+        {
+          "title": "7. Changes to these terms",
+          "paragraphs": [
+            "If we change these terms in a meaningful way, we will let you know before they apply. If you keep using plaart afterwards, you accept them."
+          ]
+        },
+        {
+          "title": "8. Governing law",
+          "paragraphs": [
+            "These terms are governed by Spanish law. If you are a consumer, you keep the right to go to the courts of your place of residence."
+          ]
+        },
+        {
+          "title": "9. Contact",
+          "paragraphs": [
+            "For any question about these terms, write to {email}."
+          ]
+        }
+      ]
     }
   }
 }
