@@ -18,7 +18,8 @@
     "next": "Siguiente",
     "yes": "Sí",
     "no": "No",
-    "retry": "Reintentar"
+    "retry": "Reintentar",
+    "ok": "Aceptar"
   },
   "editor": {
     "title": "Editor Visual",

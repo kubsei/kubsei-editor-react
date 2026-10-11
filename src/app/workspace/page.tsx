@@ -90,6 +90,19 @@ const WorkspaceContent = () => {
       };
     }
 
+    // Transport errors ("HTTP error! status: 404", fetch's "Failed to fetch") are not for users: show the translated text
+    const status = errorMessage.match(/^HTTP error! status: (\d+)/)?.[1];
+    if (status || errorMessage === "Failed to fetch") {
+      const key = !status ? "network"
+        : status === "404" ? "notFound"
+        : status === "401" || status === "403" ? "unauthorized"
+        : "server";
+      return {
+        title: t("errors.generic.title", { default: "Error" }),
+        message: t(`errors.${key}`),
+      };
+    }
+
     return {
       title: t("errors.generic.title", { default: "Error" }),
       message: errorMessage,
