@@ -24,6 +24,7 @@ import {
 import useIntl from "@/hooks/useIntl";
 import { useAuth } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/auth";
+import { errorKey } from "@/lib/api/errors";
 import {
   useProjects,
   useCreateProject,
@@ -72,41 +73,12 @@ const WorkspaceContent = () => {
   );
 
   const parseErrorMessage = (err: unknown): { title: string; message: string } => {
-    const errorMessage = err instanceof Error ? err.message : String(err);
-
-    if (errorMessage.includes("Insufficient permissions") || errorMessage.includes("Required roles")) {
-      return {
-        title: t("errors.insufficientPermissions.title", { default: "Insufficient Permissions" }),
-        message: t("errors.insufficientPermissions.message", {
-          default: "You don't have permission to perform this action. Your account has a VIEWER role which only allows viewing projects. Please contact an administrator to upgrade your account to EDITOR role."
-        }),
-      };
-    }
-
-    if (errorMessage.includes("Authentication required")) {
-      return {
-        title: t("errors.authRequired.title", { default: "Authentication Required" }),
-        message: t("errors.authRequired.message", { default: "Your session has expired. Please log in again." }),
-      };
-    }
-
-    // Transport errors ("HTTP error! status: 404", fetch's "Failed to fetch") are not for users: show the translated text
-    const status = errorMessage.match(/^HTTP error! status: (\d+)/)?.[1];
-    if (status || errorMessage === "Failed to fetch") {
-      const key = !status ? "network"
-        : status === "404" ? "notFound"
-        : status === "401" || status === "403" ? "unauthorized"
-        : "server";
-      return {
-        title: t("errors.generic.title", { default: "Error" }),
-        message: t(`errors.${key}`),
-      };
-    }
-
-    return {
-      title: t("errors.generic.title", { default: "Error" }),
-      message: errorMessage,
-    };
+    const key = errorKey(err);
+    const title =
+      key === "errors.authRequired.message" ? "errors.authRequired.title"
+      : key === "errors.forbidden" ? "errors.insufficientPermissions.title"
+      : "errors.generic.title";
+    return { title: t(title), message: t(key) };
   };
 
   const handleCreateProject = async () => {
@@ -301,7 +273,7 @@ const WorkspaceContent = () => {
           {/* Error state */}
           {error && (
             <div className="text-center py-16">
-              <p className="text-red-500 mb-4">{t("errors.server", { default: "An error occurred" })}</p>
+              <p className="text-red-500 mb-4">{t(errorKey(error))}</p>
               <button
                 onClick={() => refetch()}
                 className="px-4 py-2 bg-black text-white rounded-lg cursor-pointer"

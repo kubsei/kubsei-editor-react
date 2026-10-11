@@ -148,6 +148,12 @@
           "mismatch": "Las contraseñas no coinciden"
         }
       }
+    },
+    "errors": {
+      "invalidCredentials": "Email o contraseña incorrectos.",
+      "useProvider": "Esta cuenta se creó con Google. Entra con el botón «Continuar con Google».",
+      "accountDisabled": "Esta cuenta está desactivada. Escríbenos si crees que es un error.",
+      "emailTaken": "Ya existe una cuenta con este email. Inicia sesión o usa otro email."
     }
   },
   "workspace": {
@@ -192,7 +198,9 @@
     },
     "generic": {
       "title": "Error"
-    }
+    },
+    "forbidden": "No tienes permiso para hacer esto en este proyecto.",
+    "validation": "Algunos datos no son válidos. Revísalos e inténtalo de nuevo."
   },
   "legal": {
     "links": {

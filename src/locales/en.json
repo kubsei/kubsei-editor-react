@@ -148,6 +148,12 @@
           "mismatch": "Passwords do not match"
         }
       }
+    },
+    "errors": {
+      "invalidCredentials": "Incorrect email or password.",
+      "useProvider": "This account was created with Google. Sign in with the \"Continue with Google\" button.",
+      "accountDisabled": "This account is disabled. Contact us if you think this is a mistake.",
+      "emailTaken": "An account with this email already exists. Sign in or use another email."
     }
   },
   "workspace": {
@@ -192,7 +198,9 @@
     },
     "generic": {
       "title": "Error"
-    }
+    },
+    "forbidden": "You don't have permission to do this in this project.",
+    "validation": "Some of the data is not valid. Please check it and try again."
   },
   "legal": {
     "links": {

@@ -1,6 +1,7 @@
 "use client";
 
 import type { AuthResponse, User, LoginRequest, RegisterRequest } from "@/types/auth";
+import { ApiError } from "@/lib/api/errors";
 
 // kubsei-gateway: REST auth (kubsei-users) and /graphql (kubsei-editor) behind one origin
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
@@ -31,7 +32,7 @@ export const subscribeTokens = (onChange: () => void) => {
   return () => window.removeEventListener("storage", onChange);
 };
 
-// Errors come back as RFC 9457 problem details: { title, status, detail }
+// Errors come back as RFC 9457 problem details: { title, status, detail, code }
 async function request<T>(path: string, init: RequestInit = {}, token?: string): Promise<T> {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (token) {
@@ -42,7 +43,10 @@ async function request<T>(path: string, init: RequestInit = {}, token?: string):
 
   if (!response.ok) {
     const problem = await response.json().catch(() => null);
-    throw new Error(problem?.detail || problem?.title || `HTTP error! status: ${response.status}`);
+    throw new ApiError(
+      problem?.code ?? `HTTP_${response.status}`,
+      problem?.detail || problem?.title || `HTTP ${response.status}`
+    );
   }
 
   return response.status === 204 ? (undefined as T) : response.json();

@@ -4,6 +4,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import type { LoginRequest, RegisterRequest, User, AuthResponse } from "@/types/auth";
 import * as authService from "@/lib/api/authService";
 import { getAccessToken, getRefreshToken, setTokens, removeTokens } from "@/lib/api/authService";
+import { errorKey } from "@/lib/api/errors";
+import useIntl from "@/hooks/useIntl";
 
 interface AuthState {
   user: User | null;
@@ -14,6 +16,7 @@ interface AuthState {
 
 export const useAuth = () => {
   const router = useRouter();
+  const { t } = useIntl();
   const searchParams = useSearchParams();
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
@@ -145,7 +148,7 @@ export const useAuth = () => {
         const response = await authService.login(credentials);
         handleAuthSuccess(response);
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Error al iniciar sesión";
+        const message = t(errorKey(error));
         setAuthState((prev) => ({
           ...prev,
           isLoading: false,
@@ -154,7 +157,7 @@ export const useAuth = () => {
         throw error;
       }
     },
-    [handleAuthSuccess]
+    [handleAuthSuccess, t]
   );
 
   const register = useCallback(
@@ -165,7 +168,7 @@ export const useAuth = () => {
         const response = await authService.register(data);
         handleAuthSuccess(response);
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Error al registrarse";
+        const message = t(errorKey(error));
         setAuthState((prev) => ({
           ...prev,
           isLoading: false,
@@ -174,7 +177,7 @@ export const useAuth = () => {
         throw error;
       }
     },
-    [handleAuthSuccess]
+    [handleAuthSuccess, t]
   );
 
   const loginWithGoogle = useCallback(() => {

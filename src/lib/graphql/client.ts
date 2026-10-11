@@ -1,5 +1,6 @@
 // GraphQL client configuration for backend integration
 import { API_URL, getAccessToken, refreshSession } from "@/lib/api/authService";
+import { ApiError } from "@/lib/api/errors";
 
 const GRAPHQL_ENDPOINT = `${API_URL}/graphql`;
 
@@ -59,16 +60,15 @@ export class GraphQLClient {
     }
 
     if (!response.ok) {
-      if (response.status === 401) {
-        throw new Error("Session expired. Please log in again.");
-      }
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new ApiError(`HTTP_${response.status}`, `HTTP ${response.status}`);
     }
 
     const result: GraphQLResponse<T> = await response.json();
 
     if (result.errors && result.errors.length > 0) {
-      throw new Error(result.errors.map((e) => e.message).join(", "));
+      // kubsei-editor classifies its errors: UNAUTHORIZED, FORBIDDEN, NOT_FOUND, INTERNAL_ERROR...
+      const code = String(result.errors[0].extensions?.classification ?? "INTERNAL_ERROR");
+      throw new ApiError(code, result.errors.map((e) => e.message).join(", "));
     }
 
     return result.data as T;
